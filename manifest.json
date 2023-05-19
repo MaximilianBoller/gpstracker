@@ -1,7 +1,7 @@
 {
     "name": "GPS Location PWA",
     "short_name": "GPS PWA",
-    "start_url": ".index.html",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
