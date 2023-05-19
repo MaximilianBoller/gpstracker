@@ -23,10 +23,15 @@
           var lon = position.coords.longitude;
 
           // Initialize Leaflet map
-          var map = L.map('map').setView([lat, lon], 15);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-          }).addTo(map);
+        var map = L.map('map', {
+        worldCopyJump: true, // Enables continuous horizontal scrolling
+        }).setView([0, 0], 2);
+
+        // Add tile layer for the globe view
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
+        maxZoom: 18,
+        }).addTo(map);
 
           // Add marker for current location
           if (typeof marker === 'undefined') {
