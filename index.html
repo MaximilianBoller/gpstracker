@@ -17,46 +17,29 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      if ('permissions' in navigator && 'geolocation' in navigator) {
-        navigator.permissions.query({ name: 'geolocation' })
-          .then(function(permissionStatus) {
-            if (permissionStatus.state === 'granted') {
-              initializeMap();
-            } else if (permissionStatus.state === 'prompt') {
-              permissionStatus.onchange = function() {
-                if (this.state === 'granted') {
-                  initializeMap();
-                }
-              };
-            }
-          });
-      } else if ('geolocation' in navigator) {
-        initializeMap();
+      if ('geolocation' in navigator) {
+        navigator.geolocation.watchPosition(function(position) {
+          var lat = position.coords.latitude;
+          var lon = position.coords.longitude;
+
+          // Initialize Leaflet map
+          var map = L.map('map').setView([lat, lon], 13);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+          // Add marker for current location
+          var marker = L.marker([lat, lon]).addTo(map);
+
+          // Pan the map to the current location
+          map.panTo([lat, lon]);
+        }, function(error) {
+          console.error('Error retrieving GPS coordinates:', error);
+        });
       } else {
         console.error('Geolocation is not supported by your browser.');
       }
     });
-
-    function initializeMap() {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-
-        // Initialize Leaflet map
-        var map = L.map('map').setView([lat, lon], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Add marker for current location
-        var marker = L.marker([lat, lon]).addTo(map);
-
-        // Pan the map to the current location
-        map.panTo([lat, lon]);
-      }, function(error) {
-        console.error('Error retrieving GPS coordinates:', error);
-      });
-    }
   </script>
 </body>
 </html>
